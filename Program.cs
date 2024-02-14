@@ -1,30 +1,25 @@
 ﻿using DelegatesEvents;
 
-//public delegate void ComparisonDelegate<T>(T num);
-
-public delegate int Comparison(StudentModel s1, StudentModel s2);
+public delegate int Comparison<T>(T x, T y);
 
 class Program
 {
     public static void Main()
     {
         StudentData studentData = new StudentData();
-        var studentList = studentData.StudentList;
+        StudentModel[] students = studentData.StudentList.ToArray();
 
-        Comparison<StudentModel> studentComparer = new Comparison<StudentModel>(Compare.Sort);
-
-        
-        foreach (StudentModel student in studentList)
+        Comparison<StudentModel> scoreComparison = (student1, student2) =>
         {
-            Console.WriteLine($"{student.Name}, {student.Id}, {student.Age}");
-        }
+            return student1.Score.CompareTo(student2.Score);
+        };
 
-        studentList.Sort(studentComparer);
+        SortData.Sort(students, scoreComparison);
 
-
-        foreach (StudentModel student in studentList)
+        Console.WriteLine("Sorted Students by Score:");
+        foreach (var student in students)
         {
-            Console.WriteLine($"{student.Name}, {student.Id}, {student.Age}");
+            Console.WriteLine($"Id: {student.Id}, Name: {student.Name}, Age: {student.Age}, Score: {student.Score}");
         }
     }
 }
